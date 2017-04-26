@@ -1,6 +1,6 @@
 FROM python:3-alpine
 
-ADD configurator.py /src
+COPY configurator.py /src/
 
 EXPOSE 3218
 
