@@ -6,7 +6,7 @@
     <title>HASS Configurator</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/1.8.36/css/materialdesignicons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
     <style type="text/css" media="screen">
         body {
             margin: 0;
@@ -204,6 +204,10 @@
         .dropdown-content li>a,
         .dropdown-content li>span {
             color: #616161 !important;
+        }
+
+        .fb_dd {
+            margin-left: -15px !important;
         }
 
         .blue_check:checked+label:before {
@@ -521,7 +525,10 @@
         <li><a href="#" data-activates="ace_settings" class="ace_settings-collapse">Editor Settings</a></li>
         <li><a href="#modal_about">About HASS-Configurator</a></li>
         <li class="divider"></li>
-        <li><a href="#modal_check_config">Check HASS Configuration</a></li>
+        <!--<li><a href="#modal_check_config">Check HASS Configuration</a></li>-->
+        <li><a href="#modal_reload_automations">Reload automations</a></li>
+        <li><a href="#modal_reload_groups">Reload groups</a></li>
+        <li><a href="#modal_reload_core">Reload core</a></li>
         <li><a href="#modal_restart">Restart HASS</a></li>
         <li class="divider"></li>
         <li><a href="#modal_exec_command">Execute shell command</a></li>
@@ -533,7 +540,10 @@
         <li><a href="#" data-activates="ace_settings" class="ace_settings-collapse">Editor Settings</a></li>
         <li><a href="#modal_about">About HASS-Configurator</a></li>
         <li class="divider"></li>
-        <li><a href="#modal_check_config">Check HASS Configuration</a></li>
+        <!--<li><a href="#modal_check_config">Check HASS Configuration</a></li>-->
+        <li><a href="#modal_reload_automations">Reload automations</a></li>
+        <li><a href="#modal_reload_groups">Reload groups</a></li>
+        <li><a href="#modal_reload_core">Reload core</a></li>
         <li><a href="#modal_restart">Restart HASS</a></li>
         <li class="divider"></li>
         <li><a href="#modal_exec_command">Execute shell command</a></li>
@@ -1168,6 +1178,36 @@
           <a onclick="check_config()" class=" modal-action modal-close waves-effect waves-green btn-flat light-blue-text">Yes</a>
         </div>
     </div>
+    <div id="modal_reload_automations" class="modal">
+        <div class="modal-content">
+            <h4 class="grey-text text-darken-3">Reload automations<i class="mdi mdi-settings right grey-text text-darken-3" style="font-size: 2rem;"></i></h4>
+            <p>Do you want to reload the automations?</p>
+        </div>
+        <div class="modal-footer">
+          <a class=" modal-action modal-close waves-effect waves-red btn-flat light-blue-text">No</a>
+          <a onclick="reload_automations()" class=" modal-action modal-close waves-effect waves-green btn-flat light-blue-text">Yes</a>
+        </div>
+    </div>
+    <div id="modal_reload_groups" class="modal">
+        <div class="modal-content">
+            <h4 class="grey-text text-darken-3">Reload groups<i class="mdi mdi-settings right grey-text text-darken-3" style="font-size: 2rem;"></i></h4>
+            <p>Do you want to reload the groups?</p>
+        </div>
+        <div class="modal-footer">
+          <a class=" modal-action modal-close waves-effect waves-red btn-flat light-blue-text">No</a>
+          <a onclick="reload_groups()" class=" modal-action modal-close waves-effect waves-green btn-flat light-blue-text">Yes</a>
+        </div>
+    </div>
+    <div id="modal_reload_core" class="modal">
+        <div class="modal-content">
+            <h4 class="grey-text text-darken-3">Reload core<i class="mdi mdi-settings right grey-text text-darken-3" style="font-size: 2rem;"></i></h4>
+            <p>Do you want to reload the core?</p>
+        </div>
+        <div class="modal-footer">
+          <a class=" modal-action modal-close waves-effect waves-red btn-flat light-blue-text">No</a>
+          <a onclick="reload_core()" class=" modal-action modal-close waves-effect waves-green btn-flat light-blue-text">Yes</a>
+        </div>
+    </div>
     <div id="modal_restart" class="modal">
         <div class="modal-content">
             <h4 class="grey-text text-darken-3">Restart<i class="mdi mdi-restart right grey-text text-darken-3" style="font-size: 2rem;"></i></h4>
@@ -1256,8 +1296,8 @@
     </div>
     <div id="modal_about" class="modal modal-fixed-footer">
         <div class="modal-content">
-            <h4 class="grey-text text-darken-3"><a class="black-text" href="https://github.com/danielperna84/hass-poc-configurator/" target="_blank">HASS Configurator</a></h4>
-            <p>Version: <a class="$versionclass" href="https://github.com/danielperna84/hass-poc-configurator/releases/lafbicon_pad" target="_blank">$current</a></p>
+            <h4 class="grey-text text-darken-3"><a class="black-text" href="https://github.com/danielperna84/hass-configurator/" target="_blank">HASS Configurator</a></h4>
+            <p>Version: <a class="$versionclass" href="https://github.com/danielperna84/hass-configurator/releases/" target="_blank">$current</a></p>
             <p>Web-based file editor designed to modify configuration files of <a class="light-blue-text" href="https://home-assistant.io/" target="_blank">Home Assistant</a> or other textual files. Use at your own risk.</p>
             <p>Published under the MIT license</p>
             <p>Developed by:</p>
@@ -1334,7 +1374,7 @@
                     <option value="" disabled selected>Select trigger platform</option>
                     <option value="event">Event</option>
                     <option value="mqtt">MQTT</option>
-                    <option value="numberic_state">Numeric State</option>
+                    <option value="numeric_state">Numeric State</option>
                     <option value="state">State</option>
                     <option value="sun">Sun</option>
                     <option value="template">Template</option>
@@ -1432,7 +1472,7 @@
                 <option value="" disabled selected>Select trigger platform</option>
                 <option value="event">Event</option>
                 <option value="mqtt">MQTT</option>
-                <option value="numberic_state">Numeric State</option>
+                <option value="numeric_state">Numeric State</option>
                 <option value="state">State</option>
                 <option value="sun">Sun</option>
                 <option value="template">Template</option>
@@ -1780,7 +1820,7 @@
 <input type="hidden" id="fb_currentfile" value="" />
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('select').material_select();
@@ -1994,12 +2034,12 @@
         var dropdown = document.createElement('ul');
         dropdown.id = 'fb_dropdown_' + index;
         dropdown.classList.add('dropdown-content');
-        dropdown.classList.add('z-depth-4');
+        dropdown.classList.add("z-depth-4");
 
         // Download button
         var dd_download = document.createElement('li');
         var dd_download_a = document.createElement('a');
-        dd_download_a.classList.add('waves-effect');
+        dd_download_a.classList.add("waves-effect", "fb_dd");
         dd_download_a.setAttribute('onclick', "download_file('" + encodeURI(itemdata.fullpath) + "')");
         dd_download_a.innerHTML = "Download";
         dd_download.appendChild(dd_download_a);
@@ -2007,7 +2047,7 @@
 
         // Delete button
         var dd_delete = document.createElement('li');
-        dd_delete.classList.add("waves-effect");
+        dd_delete.classList.add("waves-effect", "fb_dd");
         var dd_delete_a = document.createElement('a');
         dd_delete_a.setAttribute('href', "#modal_delete");
         dd_delete_a.innerHTML = "Delete";
@@ -2022,7 +2062,7 @@
                 // git add button
                 var dd_gitadd = document.createElement('li');
                 var dd_gitadd_a = document.createElement('a');
-                dd_gitadd_a.classList.add('waves-effect');
+                dd_gitadd_a.classList.add('waves-effect', 'fb_dd');
                 dd_gitadd_a.setAttribute('href', "#modal_gitadd");
                 dd_gitadd_a.innerHTML = "git add";
                 dd_gitadd.appendChild(dd_gitadd_a);
@@ -2146,8 +2186,29 @@
             }
             else {
                 var $toastContent = $("<div><pre>" + resp[0].state + "</pre></div>");
-                Materialize.toast($toastContent, 5000);
+                Materialize.toast($toastContent, 2000);
             }
+        });
+    }
+
+    function reload_automations() {
+        $.get("api/reload_automations", function (resp) {
+            var $toastContent = $("<div>Automations reloaded</div>");
+            Materialize.toast($toastContent, 2000);
+        });
+    }
+
+    function reload_groups() {
+        $.get("api/reload_groups", function (resp) {
+            var $toastContent = $("<div><pre>Groups reloaded</pre></div>");
+            Materialize.toast($toastContent, 2000);
+        });
+    }
+
+    function reload_core() {
+        $.get("api/reload_core", function (resp) {
+            var $toastContent = $("<div><pre>Core reloaded</pre></div>");
+            Materialize.toast($toastContent, 2000);
         });
     }
 
